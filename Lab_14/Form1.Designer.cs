@@ -30,29 +30,33 @@
         {
             this.components = new System.ComponentModel.Container();
             this.panel1 = new System.Windows.Forms.Panel();
-            this.label1 = new System.Windows.Forms.Label();
-            this.label2 = new System.Windows.Forms.Label();
-            this.label3 = new System.Windows.Forms.Label();
-            this.label4 = new System.Windows.Forms.Label();
-            this.label5 = new System.Windows.Forms.Label();
-            this.label6 = new System.Windows.Forms.Label();
-            this.Served = new System.Windows.Forms.Label();
-            this.Queued = new System.Windows.Forms.Label();
-            this.ClientFlow = new System.Windows.Forms.NumericUpDown();
-            this.NumOfConsultants = new System.Windows.Forms.NumericUpDown();
-            this.ServiceIntensity = new System.Windows.Forms.NumericUpDown();
             this.button1 = new System.Windows.Forms.Button();
+            this.ServiceIntensity = new System.Windows.Forms.NumericUpDown();
+            this.NumOfConsultants = new System.Windows.Forms.NumericUpDown();
+            this.ClientFlow = new System.Windows.Forms.NumericUpDown();
+            this.Queued = new System.Windows.Forms.Label();
+            this.Served = new System.Windows.Forms.Label();
+            this.label6 = new System.Windows.Forms.Label();
+            this.label5 = new System.Windows.Forms.Label();
+            this.label4 = new System.Windows.Forms.Label();
+            this.label3 = new System.Windows.Forms.Label();
+            this.label2 = new System.Windows.Forms.Label();
+            this.label1 = new System.Windows.Forms.Label();
             this.dataGridView1 = new System.Windows.Forms.DataGridView();
             this.timer1 = new System.Windows.Forms.Timer(this.components);
+            this.Time = new System.Windows.Forms.Label();
+            this.label8 = new System.Windows.Forms.Label();
             this.panel1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.ClientFlow)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.NumOfConsultants)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.ServiceIntensity)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.NumOfConsultants)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.ClientFlow)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             this.SuspendLayout();
             // 
             // panel1
             // 
+            this.panel1.Controls.Add(this.Time);
+            this.panel1.Controls.Add(this.label8);
             this.panel1.Controls.Add(this.button1);
             this.panel1.Controls.Add(this.ServiceIntensity);
             this.panel1.Controls.Add(this.NumOfConsultants);
@@ -67,105 +71,18 @@
             this.panel1.Controls.Add(this.label1);
             this.panel1.Location = new System.Drawing.Point(12, 12);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(292, 270);
+            this.panel1.Size = new System.Drawing.Size(292, 307);
             this.panel1.TabIndex = 0;
             // 
-            // label1
+            // button1
             // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(126, 16);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(38, 16);
-            this.label1.TabIndex = 0;
-            this.label1.Text = "Bank";
-            // 
-            // label2
-            // 
-            this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(20, 86);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(139, 16);
-            this.label2.TabIndex = 1;
-            this.label2.Text = "Number of consultants";
-            // 
-            // label3
-            // 
-            this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(20, 51);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(66, 16);
-            this.label3.TabIndex = 2;
-            this.label3.Text = "Client flow";
-            // 
-            // label4
-            // 
-            this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(20, 121);
-            this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(104, 16);
-            this.label4.TabIndex = 3;
-            this.label4.Text = "Service intensity";
-            // 
-            // label5
-            // 
-            this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(22, 156);
-            this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(51, 16);
-            this.label5.TabIndex = 4;
-            this.label5.Text = "Served";
-            // 
-            // label6
-            // 
-            this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(20, 191);
-            this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(55, 16);
-            this.label6.TabIndex = 5;
-            this.label6.Text = "Queued";
-            // 
-            // Served
-            // 
-            this.Served.AutoSize = true;
-            this.Served.Location = new System.Drawing.Point(189, 156);
-            this.Served.Name = "Served";
-            this.Served.Size = new System.Drawing.Size(14, 16);
-            this.Served.TabIndex = 6;
-            this.Served.Text = "0";
-            // 
-            // Queued
-            // 
-            this.Queued.AutoSize = true;
-            this.Queued.Location = new System.Drawing.Point(189, 191);
-            this.Queued.Name = "Queued";
-            this.Queued.Size = new System.Drawing.Size(14, 16);
-            this.Queued.TabIndex = 7;
-            this.Queued.Text = "0";
-            // 
-            // ClientFlow
-            // 
-            this.ClientFlow.DecimalPlaces = 2;
-            this.ClientFlow.Location = new System.Drawing.Point(192, 49);
-            this.ClientFlow.Name = "ClientFlow";
-            this.ClientFlow.Size = new System.Drawing.Size(79, 22);
-            this.ClientFlow.TabIndex = 8;
-            this.ClientFlow.Value = new decimal(new int[] {
-            5,
-            0,
-            0,
-            0});
-            // 
-            // NumOfConsultants
-            // 
-            this.NumOfConsultants.Location = new System.Drawing.Point(192, 84);
-            this.NumOfConsultants.Name = "NumOfConsultants";
-            this.NumOfConsultants.Size = new System.Drawing.Size(79, 22);
-            this.NumOfConsultants.TabIndex = 9;
-            this.NumOfConsultants.Value = new decimal(new int[] {
-            3,
-            0,
-            0,
-            0});
+            this.button1.Location = new System.Drawing.Point(25, 261);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(248, 23);
+            this.button1.TabIndex = 11;
+            this.button1.Text = "Start/Stop";
+            this.button1.UseVisualStyleBackColor = true;
+            this.button1.Click += new System.EventHandler(this.button1_Click);
             // 
             // ServiceIntensity
             // 
@@ -180,15 +97,102 @@
             0,
             65536});
             // 
-            // button1
+            // NumOfConsultants
             // 
-            this.button1.Location = new System.Drawing.Point(23, 226);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(248, 23);
-            this.button1.TabIndex = 11;
-            this.button1.Text = "Start/Stop";
-            this.button1.UseVisualStyleBackColor = true;
-            this.button1.Click += new System.EventHandler(this.button1_Click);
+            this.NumOfConsultants.Location = new System.Drawing.Point(192, 84);
+            this.NumOfConsultants.Name = "NumOfConsultants";
+            this.NumOfConsultants.Size = new System.Drawing.Size(79, 22);
+            this.NumOfConsultants.TabIndex = 9;
+            this.NumOfConsultants.Value = new decimal(new int[] {
+            3,
+            0,
+            0,
+            0});
+            // 
+            // ClientFlow
+            // 
+            this.ClientFlow.DecimalPlaces = 2;
+            this.ClientFlow.Location = new System.Drawing.Point(192, 49);
+            this.ClientFlow.Name = "ClientFlow";
+            this.ClientFlow.Size = new System.Drawing.Size(79, 22);
+            this.ClientFlow.TabIndex = 8;
+            this.ClientFlow.Value = new decimal(new int[] {
+            5,
+            0,
+            0,
+            0});
+            // 
+            // Queued
+            // 
+            this.Queued.AutoSize = true;
+            this.Queued.Location = new System.Drawing.Point(189, 191);
+            this.Queued.Name = "Queued";
+            this.Queued.Size = new System.Drawing.Size(14, 16);
+            this.Queued.TabIndex = 7;
+            this.Queued.Text = "0";
+            // 
+            // Served
+            // 
+            this.Served.AutoSize = true;
+            this.Served.Location = new System.Drawing.Point(189, 156);
+            this.Served.Name = "Served";
+            this.Served.Size = new System.Drawing.Size(14, 16);
+            this.Served.TabIndex = 6;
+            this.Served.Text = "0";
+            // 
+            // label6
+            // 
+            this.label6.AutoSize = true;
+            this.label6.Location = new System.Drawing.Point(20, 191);
+            this.label6.Name = "label6";
+            this.label6.Size = new System.Drawing.Size(55, 16);
+            this.label6.TabIndex = 5;
+            this.label6.Text = "Queued";
+            // 
+            // label5
+            // 
+            this.label5.AutoSize = true;
+            this.label5.Location = new System.Drawing.Point(22, 156);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(51, 16);
+            this.label5.TabIndex = 4;
+            this.label5.Text = "Served";
+            // 
+            // label4
+            // 
+            this.label4.AutoSize = true;
+            this.label4.Location = new System.Drawing.Point(20, 121);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(104, 16);
+            this.label4.TabIndex = 3;
+            this.label4.Text = "Service intensity";
+            // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Location = new System.Drawing.Point(20, 51);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(66, 16);
+            this.label3.TabIndex = 2;
+            this.label3.Text = "Client flow";
+            // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Location = new System.Drawing.Point(20, 86);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(139, 16);
+            this.label2.TabIndex = 1;
+            this.label2.Text = "Number of consultants";
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(126, 16);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(38, 16);
+            this.label1.TabIndex = 0;
+            this.label1.Text = "Bank";
             // 
             // dataGridView1
             // 
@@ -209,6 +213,24 @@
             // 
             this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
             // 
+            // Time
+            // 
+            this.Time.AutoSize = true;
+            this.Time.Location = new System.Drawing.Point(189, 226);
+            this.Time.Name = "Time";
+            this.Time.Size = new System.Drawing.Size(14, 16);
+            this.Time.TabIndex = 13;
+            this.Time.Text = "0";
+            // 
+            // label8
+            // 
+            this.label8.AutoSize = true;
+            this.label8.Location = new System.Drawing.Point(20, 226);
+            this.label8.Name = "label8";
+            this.label8.Size = new System.Drawing.Size(38, 16);
+            this.label8.TabIndex = 12;
+            this.label8.Text = "Time";
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
@@ -220,9 +242,9 @@
             this.Text = "Form1";
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.ClientFlow)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.NumOfConsultants)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.ServiceIntensity)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.NumOfConsultants)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.ClientFlow)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
             this.ResumeLayout(false);
 
@@ -245,6 +267,8 @@
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.DataGridView dataGridView1;
         private System.Windows.Forms.Timer timer1;
+        private System.Windows.Forms.Label Time;
+        private System.Windows.Forms.Label label8;
     }
 }
 
