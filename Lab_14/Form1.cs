@@ -26,16 +26,6 @@ namespace Lab_14
         private double currentTime;
         private int servedClientsCount;
 
-        public void AddNewClientToList(ClientData client)
-        {
-            allClientsEverCreated.Add(client);
-        }
-
-        public void IncrementServedClientsCount()
-        {
-            servedClientsCount++;
-        }
-
         public Form1()
         {
             InitializeComponent();
@@ -64,51 +54,51 @@ namespace Lab_14
                     return;
                 }
 
-                Agent.ResetActiveAgentIds();
-                ClientData.ResetClientIds();
-                currentTime = 0;
-                servedClientsCount = 0;
-
-                consultants.Clear();
-                clientQueue.Clear();
-                allClientsEverCreated.Clear();
-                eventSchedulingAgents.Clear();
-
-                for (int i = 0; i < N_consultants; i++)
-                {
-                    Consultant c = new Consultant(mu_serviceIntensity);
-                    consultants.Add(c);
-                    eventSchedulingAgents.Add(c);
-                }
-
-                arrivalGeneratorAgent = new ArrivalGenerator(lambda_clientFlow);
-                eventSchedulingAgents.Add(arrivalGeneratorAgent);
-
-                if (dataGridView1.ColumnCount == 0)
-                {
-                    dataGridView1.ColumnCount = 3;
-                    dataGridView1.Columns[0].HeaderText = "Entity Type";
-                    dataGridView1.Columns[0].Name = "EntityType";
-                    dataGridView1.Columns[1].HeaderText = "ID";
-                    dataGridView1.Columns[1].Name = "EntityID";
-                    dataGridView1.Columns[2].HeaderText = "Status";
-                    dataGridView1.Columns[2].Name = "EntityStatus";
-                }
+                InitializeSimulation();
 
                 timer1.Start();
                 button1.Text = "Stop Simulation";
-                UpdateUI();
             }
+        }
+
+        private void InitializeSimulation()
+        {
+            Agent.ResetActiveAgentIds();
+            ClientData.ResetClientIds();
+            currentTime = 0;
+            servedClientsCount = 0;
+
+            consultants.Clear();
+            clientQueue.Clear();
+            allClientsEverCreated.Clear();
+            eventSchedulingAgents.Clear();
+
+            for (int i = 0; i < N_consultants; i++)
+            {
+                var c = new Consultant(mu_serviceIntensity);
+                consultants.Add(c);
+                eventSchedulingAgents.Add(c);
+            }
+
+            arrivalGeneratorAgent = new ArrivalGenerator(lambda_clientFlow);
+            eventSchedulingAgents.Add(arrivalGeneratorAgent);
+
+            if (dataGridView1.ColumnCount == 0)
+            {
+                dataGridView1.ColumnCount = 3;
+                dataGridView1.Columns[0].HeaderText = "Entity Type";
+                dataGridView1.Columns[0].Name = "EntityType";
+                dataGridView1.Columns[1].HeaderText = "ID";
+                dataGridView1.Columns[1].Name = "EntityID";
+                dataGridView1.Columns[2].HeaderText = "Status";
+                dataGridView1.Columns[2].Name = "EntityStatus";
+            }
+
+            UpdateUI();
         }
 
         private void timer1_Tick(object sender, EventArgs e)
         {
-            if (eventSchedulingAgents.Count == 0)
-            {
-                timer1.Stop();
-                return;
-            }
-
             double minNextEventTime = double.MaxValue;
             Agent nextAgentToProcess = null;
 
@@ -126,27 +116,48 @@ namespace Lab_14
             {
                 timer1.Stop();
                 button1.Text = "Start Simulation";
-                MessageBox.Show($"Simulation ended or no further events at time {currentTime:F2}.", "Simulation Status");
-                UpdateUI();
+                MessageBox.Show($"Simulation ended at time {currentTime:F2}.", "Simulation Status");
                 return;
             }
 
             currentTime = minNextEventTime;
-            nextAgentToProcess.ProcessEvent(currentTime, this);
+            nextAgentToProcess.ProcessEvent(currentTime);
+
+            if (nextAgentToProcess is ArrivalGenerator generator)
+            {
+                ClientData newClient = generator.LastClientArrived;
+                allClientsEverCreated.Add(newClient);
+
+                Consultant freeConsultant = consultants.FirstOrDefault(c => c.State == ConsultantState.Free);
+                if (freeConsultant != null)
+                {
+                    freeConsultant.StartService(newClient, currentTime);
+                }
+                else
+                {
+                    newClient.Status = ClientStatus.WaitingInQueue;
+                    clientQueue.Enqueue(newClient);
+                }
+            }
+            else if (nextAgentToProcess is Consultant consultant)
+            {
+                servedClientsCount++;
+                consultant.LastClientServed.Status = ClientStatus.Served_Departed;
+
+                if (clientQueue.Count > 0)
+                {
+                    ClientData nextClient = clientQueue.Dequeue();
+                    consultant.StartService(nextClient, currentTime);
+                }
+            }
+
             UpdateUI();
         }
-
         private void UpdateUI()
         {
             Served.Text = servedClientsCount.ToString();
             Queued.Text = clientQueue.Count.ToString();
             Time.Text = String.Format("{0:0.00}", currentTime);
-
-            Control[] foundControls = this.Controls.Find("lblTimer", true);
-            if (foundControls.Length > 0 && foundControls[0] is Label)
-            {
-                ((Label)foundControls[0]).Text = $"Time: {currentTime:F2}";
-            }
 
             dataGridView1.Rows.Clear();
 

@@ -6,8 +6,9 @@
     {
         public ConsultantState State { get; private set; }
         public ClientData CurrentClient { get; private set; }
+        public ClientData LastClientServed { get; private set; }
         private double serviceCompletionTime;
-        private double mu_intensity;
+        private readonly double mu_intensity;
 
         public Consultant(double serviceIntensity) : base()
         {
@@ -20,7 +21,7 @@
         {
             CurrentClient = client;
             State = ConsultantState.Busy;
-            client.BeginService(currentTime);
+            client.Status = ClientStatus.BeingServed;
             serviceCompletionTime = currentTime + ExpRandomValue(this.mu_intensity);
         }
 
@@ -29,24 +30,12 @@
             return serviceCompletionTime;
         }
 
-        public override void ProcessEvent(double currentTime, Form1 context)
+        public override void ProcessEvent(double currentTime)
         {
-            if (State == ConsultantState.Busy && CurrentClient != null)
-            {
-                ClientData servedClient = CurrentClient;
-                servedClient.CompleteService(currentTime);
-                context.IncrementServedClientsCount();
-
-                CurrentClient = null;
-                State = ConsultantState.Free;
-                serviceCompletionTime = double.MaxValue;
-
-                if (context.clientQueue.Count > 0)
-                {
-                    ClientData clientFromQueue = context.clientQueue.Dequeue();
-                    StartService(clientFromQueue, currentTime);
-                }
-            }
+            this.LastClientServed = this.CurrentClient;
+            this.CurrentClient = null;
+            this.State = ConsultantState.Free;
+            this.serviceCompletionTime = double.MaxValue;
         }
 
         public override string GetStatus()

@@ -13,7 +13,7 @@ namespace Lab_14
         }
 
         public abstract double GetNextEventTime();
-        public abstract void ProcessEvent(double currentTime, Form1 context);
+        public abstract void ProcessEvent(double currentTime);
         public abstract string GetStatus();
 
         public static void ResetActiveAgentIds()
@@ -22,7 +22,6 @@ namespace Lab_14
         }
 
         protected static Random rndShared = new Random();
-
         protected double ExpRandomValue(double rate)
         {
             if (rate <= 0) return double.MaxValue;

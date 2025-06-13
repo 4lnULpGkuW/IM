@@ -1,11 +1,10 @@
-﻿using System.Linq;
-
-namespace Lab_14
+﻿namespace Lab_14
 {
     public class ArrivalGenerator : Agent
     {
         private double nextArrivalTime;
-        private double lambda;
+        private readonly double lambda;
+        public ClientData LastClientArrived { get; private set; }
 
         public ArrivalGenerator(double lambdaRate) : base()
         {
@@ -18,27 +17,15 @@ namespace Lab_14
             return nextArrivalTime;
         }
 
-        public override void ProcessEvent(double currentTime, Form1 context)
+        public override void ProcessEvent(double currentTime)
         {
-            ClientData newClient = new ClientData(currentTime);
-            context.AddNewClientToList(newClient);
-
-            Consultant freeConsultant = context.consultants.FirstOrDefault(c => c.State == ConsultantState.Free);
-            if (freeConsultant != null)
-            {
-                freeConsultant.StartService(newClient, currentTime);
-            }
-            else
-            {
-                newClient.EnterQueue();
-                context.clientQueue.Enqueue(newClient);
-            }
+            this.LastClientArrived = new ClientData(currentTime);
             this.nextArrivalTime = currentTime + ExpRandomValue(this.lambda);
         }
 
         public override string GetStatus()
         {
-            return $"Generates next client at {nextArrivalTime:F2}";
+            return $"Next arrival at {nextArrivalTime:F2}";
         }
     }
 }
