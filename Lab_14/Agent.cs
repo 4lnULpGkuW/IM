@@ -6,10 +6,12 @@ namespace Lab_14
     {
         public int Id { get; protected set; }
         protected static int nextAgentId = 0;
+        protected BankOffice office;
 
-        public Agent()
+        public Agent(BankOffice officeContext)
         {
-            Id = System.Threading.Interlocked.Increment(ref nextAgentId);
+            Id = ++nextAgentId;
+            this.office = officeContext;
         }
 
         public abstract double GetNextEventTime();

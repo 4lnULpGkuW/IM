@@ -30,6 +30,8 @@
         {
             this.components = new System.ComponentModel.Container();
             this.panel1 = new System.Windows.Forms.Panel();
+            this.Time = new System.Windows.Forms.Label();
+            this.label8 = new System.Windows.Forms.Label();
             this.button1 = new System.Windows.Forms.Button();
             this.ServiceIntensity = new System.Windows.Forms.NumericUpDown();
             this.NumOfConsultants = new System.Windows.Forms.NumericUpDown();
@@ -44,8 +46,6 @@
             this.label1 = new System.Windows.Forms.Label();
             this.dataGridView1 = new System.Windows.Forms.DataGridView();
             this.timer1 = new System.Windows.Forms.Timer(this.components);
-            this.Time = new System.Windows.Forms.Label();
-            this.label8 = new System.Windows.Forms.Label();
             this.panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.ServiceIntensity)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.NumOfConsultants)).BeginInit();
@@ -73,6 +73,24 @@
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(292, 307);
             this.panel1.TabIndex = 0;
+            // 
+            // Time
+            // 
+            this.Time.AutoSize = true;
+            this.Time.Location = new System.Drawing.Point(189, 226);
+            this.Time.Name = "Time";
+            this.Time.Size = new System.Drawing.Size(14, 16);
+            this.Time.TabIndex = 13;
+            this.Time.Text = "0";
+            // 
+            // label8
+            // 
+            this.label8.AutoSize = true;
+            this.label8.Location = new System.Drawing.Point(20, 226);
+            this.label8.Name = "label8";
+            this.label8.Size = new System.Drawing.Size(38, 16);
+            this.label8.TabIndex = 12;
+            this.label8.Text = "Time";
             // 
             // button1
             // 
@@ -117,10 +135,10 @@
             this.ClientFlow.Size = new System.Drawing.Size(79, 22);
             this.ClientFlow.TabIndex = 8;
             this.ClientFlow.Value = new decimal(new int[] {
-            5,
+            75,
             0,
             0,
-            0});
+            65536});
             // 
             // Queued
             // 
@@ -211,25 +229,8 @@
             // 
             // timer1
             // 
+            this.timer1.Interval = 25;
             this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
-            // 
-            // Time
-            // 
-            this.Time.AutoSize = true;
-            this.Time.Location = new System.Drawing.Point(189, 226);
-            this.Time.Name = "Time";
-            this.Time.Size = new System.Drawing.Size(14, 16);
-            this.Time.TabIndex = 13;
-            this.Time.Text = "0";
-            // 
-            // label8
-            // 
-            this.label8.AutoSize = true;
-            this.label8.Location = new System.Drawing.Point(20, 226);
-            this.label8.Name = "label8";
-            this.label8.Size = new System.Drawing.Size(38, 16);
-            this.label8.TabIndex = 12;
-            this.label8.Text = "Time";
             // 
             // Form1
             // 

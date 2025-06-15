@@ -48,6 +48,7 @@
   <ItemGroup>
     <Compile Include="Agent.cs" />
     <Compile Include="ArrivalGenerator.cs" />
+    <Compile Include="BankOffice.cs" />
     <Compile Include="ClientData.cs" />
     <Compile Include="Consultant.cs" />
     <Compile Include="Form1.cs">

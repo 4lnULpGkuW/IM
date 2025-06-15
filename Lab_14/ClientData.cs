@@ -11,7 +11,7 @@
 
         public ClientData(double arrivalTime)
         {
-            Id = System.Threading.Interlocked.Increment(ref nextId);
+            Id = ++nextId;
             ArrivalTime = arrivalTime;
             Status = ClientStatus.Arrived;
         }

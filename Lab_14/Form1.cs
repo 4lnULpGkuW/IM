@@ -12,27 +12,16 @@ namespace Lab_14
 {
     public partial class Form1 : Form
     {
-        internal double lambda_clientFlow;
-        internal double mu_serviceIntensity;
-        internal int N_consultants;
-
-        internal List<Consultant> consultants;
-        internal Queue<ClientData> clientQueue;
-        internal List<ClientData> allClientsEverCreated;
-
-        private ArrivalGenerator arrivalGeneratorAgent;
+        private BankOffice office;
         private List<Agent> eventSchedulingAgents;
-
         private double currentTime;
-        private int servedClientsCount;
+        private Agent agentForNextEvent;
+        private double nextEventTime;
+
 
         public Form1()
         {
             InitializeComponent();
-            consultants = new List<Consultant>();
-            clientQueue = new Queue<ClientData>();
-            allClientsEverCreated = new List<ClientData>();
-            eventSchedulingAgents = new List<Agent>();
         }
 
         private void button1_Click(object sender, EventArgs e)
@@ -44,44 +33,40 @@ namespace Lab_14
             }
             else
             {
-                lambda_clientFlow = (double)ClientFlow.Value;
-                mu_serviceIntensity = (double)ServiceIntensity.Value;
-                N_consultants = (int)NumOfConsultants.Value;
+                double lambda = (double)ClientFlow.Value;
+                double mu = (double)ServiceIntensity.Value;
+                int n = (int)NumOfConsultants.Value;
 
-                if (lambda_clientFlow <= 0 || mu_serviceIntensity <= 0 || N_consultants <= 0)
+                if (lambda <= 0 || mu <= 0 || n <= 0)
                 {
-                    MessageBox.Show("Please enter positive values for flow, intensity, and number of consultants.", "Invalid Input", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    MessageBox.Show("Please enter positive values.", "Invalid Input", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                     return;
                 }
 
-                InitializeSimulation();
+                InitializeSimulation(lambda, mu, n);
 
                 timer1.Start();
                 button1.Text = "Stop Simulation";
             }
         }
 
-        private void InitializeSimulation()
+        private void InitializeSimulation(double lambda, double mu, int n)
         {
+            this.office = new BankOffice();
+            this.eventSchedulingAgents = new List<Agent>();
+
             Agent.ResetActiveAgentIds();
             ClientData.ResetClientIds();
-            currentTime = 0;
-            servedClientsCount = 0;
 
-            consultants.Clear();
-            clientQueue.Clear();
-            allClientsEverCreated.Clear();
-            eventSchedulingAgents.Clear();
-
-            for (int i = 0; i < N_consultants; i++)
+            for (int i = 0; i < n; i++)
             {
-                var c = new Consultant(mu_serviceIntensity);
-                consultants.Add(c);
-                eventSchedulingAgents.Add(c);
+                var consultant = new Consultant(mu, this.office);
+                this.office.Consultants.Add(consultant);
+                this.eventSchedulingAgents.Add(consultant);
             }
 
-            arrivalGeneratorAgent = new ArrivalGenerator(lambda_clientFlow);
-            eventSchedulingAgents.Add(arrivalGeneratorAgent);
+            var generator = new ArrivalGenerator(lambda, this.office);
+            this.eventSchedulingAgents.Add(generator);
 
             if (dataGridView1.ColumnCount == 0)
             {
@@ -94,95 +79,67 @@ namespace Lab_14
                 dataGridView1.Columns[2].Name = "EntityStatus";
             }
 
+            FindNextEvent();
             UpdateUI();
         }
-
-        private void timer1_Tick(object sender, EventArgs e)
+        private void FindNextEvent()
         {
-            double minNextEventTime = double.MaxValue;
-            Agent nextAgentToProcess = null;
+            double minTime = double.MaxValue;
+            this.agentForNextEvent = null;
 
             foreach (Agent agent in eventSchedulingAgents)
             {
                 double agentEventTime = agent.GetNextEventTime();
-                if (agentEventTime < minNextEventTime)
+                if (agentEventTime < minTime)
                 {
-                    minNextEventTime = agentEventTime;
-                    nextAgentToProcess = agent;
+                    minTime = agentEventTime;
+                    this.nextEventTime = agentEventTime;
+                    this.agentForNextEvent = agent;
                 }
             }
-
-            if (nextAgentToProcess == null || minNextEventTime == double.MaxValue)
+        }
+        private void timer1_Tick(object sender, EventArgs e)
+        {
+            office.CurrentTime += 0.01;
+            if (office.CurrentTime >= this.nextEventTime)
             {
-                timer1.Stop();
-                button1.Text = "Start Simulation";
-                MessageBox.Show($"Simulation ended at time {currentTime:F2}.", "Simulation Status");
-                return;
+                agentForNextEvent.ProcessEvent(nextEventTime);
+                FindNextEvent();
             }
-
-            currentTime = minNextEventTime;
-            nextAgentToProcess.ProcessEvent(currentTime);
-
-            if (nextAgentToProcess is ArrivalGenerator generator)
-            {
-                ClientData newClient = generator.LastClientArrived;
-                allClientsEverCreated.Add(newClient);
-
-                Consultant freeConsultant = consultants.FirstOrDefault(c => c.State == ConsultantState.Free);
-                if (freeConsultant != null)
-                {
-                    freeConsultant.StartService(newClient, currentTime);
-                }
-                else
-                {
-                    newClient.Status = ClientStatus.WaitingInQueue;
-                    clientQueue.Enqueue(newClient);
-                }
-            }
-            else if (nextAgentToProcess is Consultant consultant)
-            {
-                servedClientsCount++;
-                consultant.LastClientServed.Status = ClientStatus.Served_Departed;
-
-                if (clientQueue.Count > 0)
-                {
-                    ClientData nextClient = clientQueue.Dequeue();
-                    consultant.StartService(nextClient, currentTime);
-                }
-            }
-
             UpdateUI();
         }
+
         private void UpdateUI()
         {
-            Served.Text = servedClientsCount.ToString();
-            Queued.Text = clientQueue.Count.ToString();
-            Time.Text = String.Format("{0:0.00}", currentTime);
+            if (office == null) return;
+
+            Served.Text = office.ServedClientsCount.ToString();
+            Queued.Text = office.ClientQueue.Count.ToString();
+            Time.Text = String.Format("{0:0.00}", office.CurrentTime);
 
             dataGridView1.Rows.Clear();
 
-            foreach (var consultant in consultants)
+            dataGridView1.Columns[1].Width = 30;
+            dataGridView1.Columns[2].Width = 200;
+
+            foreach (var consultant in office.Consultants)
             {
-                int rowIndex = dataGridView1.Rows.Add();
-                dataGridView1.Rows[rowIndex].Cells["EntityType"].Value = "Consultant";
-                dataGridView1.Rows[rowIndex].Cells["EntityID"].Value = consultant.Id;
-                dataGridView1.Rows[rowIndex].Cells["EntityStatus"].Value = consultant.GetStatus();
+                var row = new DataGridViewRow();
+                row.CreateCells(dataGridView1);
+                row.Cells[0].Value = "Consultant";
+                row.Cells[1].Value = consultant.Id;
+                row.Cells[2].Value = consultant.GetStatus();
+                dataGridView1.Rows.Add(row);
             }
 
-            if (arrivalGeneratorAgent != null)
+            foreach (var client in office.ClientQueue)
             {
-                int rowIndex = dataGridView1.Rows.Add();
-                dataGridView1.Rows[rowIndex].Cells["EntityType"].Value = "ArrivalGen";
-                dataGridView1.Rows[rowIndex].Cells["EntityID"].Value = arrivalGeneratorAgent.Id;
-                dataGridView1.Rows[rowIndex].Cells["EntityStatus"].Value = arrivalGeneratorAgent.GetStatus();
-            }
-
-            foreach (var client in clientQueue)
-            {
-                int rowIndex = dataGridView1.Rows.Add();
-                dataGridView1.Rows[rowIndex].Cells["EntityType"].Value = "Client";
-                dataGridView1.Rows[rowIndex].Cells["EntityID"].Value = client.Id;
-                dataGridView1.Rows[rowIndex].Cells["EntityStatus"].Value = client.GetStatus();
+                var row = new DataGridViewRow();
+                row.CreateCells(dataGridView1);
+                row.Cells[0].Value = "Client";
+                row.Cells[1].Value = client.Id;
+                row.Cells[2].Value = client.GetStatus();
+                dataGridView1.Rows.Add(row);
             }
         }
     }
